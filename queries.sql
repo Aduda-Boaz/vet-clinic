@@ -35,9 +35,9 @@ ROLLBACK;
 
 BEGIN;
 DELETE FROM animals WHERE date_of_birth > '2022-01-01';
-SAVEPOINT SP1;
+SAVEPOINT;
 UPDATE animals SET weight_kg = weight_kg * -1;
-ROLLBACK TO SAVEPOINT SP1;
+ROLLBACK TO SAVEPOINT;
 UPDATE animals SET weight_kg = weight_kg * -1 WHERE weight_kg < 0;
 COMMIT;
 
@@ -73,15 +73,13 @@ SELECT species, MIN(weight_kg), MAX(weight_kg) FROM animals GROUP BY species;
  digimon | 5.7 |  45
 (2 rows)
 
-SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BE
-TWEEN '1990-01-01' AND '2000-12-31' GROUP BY species;
+SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN '1990-01-01' AND '2000-12-31' GROUP BY species;
  species |        avg
 ---------+--------------------
  pokemon | 3.0000000000000000
 (1 row)
 
-SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BE
-TWEEN '1990-01-01' AND '2000-12-31' GROUP BY species;
+SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN '1990-01-01' AND '2000-12-31' GROUP BY species;
  species |        avg
 ---------+--------------------
  pokemon | 3.0000000000000000
