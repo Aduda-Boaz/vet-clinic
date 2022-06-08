@@ -7,6 +7,8 @@ CREATE TABLE animals (
     escape_attempts INT NOT NULL,
     neutered        BOOLEAN NOT NULL,
     weight_kg       DECIMAL,
-    species         VARCHAR(100),
     PRIMARY KEY (id)
 );
+
+/* ADD species COLUMN of a string */
+ALTER TABLE animals ADD COLUMN species VARCHAR(100);
