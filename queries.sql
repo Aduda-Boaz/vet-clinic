@@ -56,3 +56,38 @@ SELECT species, MIN(weight_kg), MAX(weight_kg) FROM animals GROUP BY species;
 SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN '1990-01-01' AND '2000-12-31' GROUP BY species;
 
 SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth BETWEEN '1990-01-01' AND '2000-12-31' GROUP BY species;
+
+/* QUERY MULTIPLES */
+SELECT full_name as OWNER, name as PET FROM owners INNER JOIN animals ON owners.id = animals.owners_id
+WHERE owners.full_name = 'Melody Pond';
+
+SELECT full_name as OWNER, name as PET FROM (SELECT * FROM owners WHERE full_name = 'Melody Pond')
+OWN INNER JOIN animals ON OWN.id = animals.owners_id;
+
+SELECT species.name as SPECIES, animals.name as PET FROM species INNER JOIN animals ON species.id = animals.species_id
+WHERE species.name = 'Pokemon';
+
+SELECT SPECIE.name as SPECIES, animals.name as PET FROM (SELECT * FROM species WHERE name = 'Pokemon')
+SPECIE INNER JOIN animals on SPECIE.id = animals.species_id;
+
+SELECT owners.full_name as OWNER, animals.name as PET FROM owners LEFT JOIN animals 
+ON owners.id = animals.owners_id ORDER BY owners.id;
+
+SELECT species.name as SPECIE, COUNT(species.name) AS NUM FROM species INNER JOIN animals
+ON species.id = animals.species_id GROUP BY species.name;
+
+SELECT ANIMALOWNER.name as PET, species.name as SPECIES, ANIMALOWNER.full_name as OWNER
+FROM species INNER JOIN (SELECT * FROM owners INNER JOIN animals ON
+  owners.id = animals.owners_id WHERE owners.full_name = 'Jennifer Orwell')
+  ANIMALOWNER ON species.id = ANIMALOWNER.species_id WHERE species.name = 'Digimon';
+
+SELECT animals.name as PET, animals.escape_attempts as ESCAPE owners.full_name as OWNER
+FROM owners INNER JOIN animals ON owners.id = animals.owners_id WHERE owners.full_name = 'Dean Winchester'
+AND animals.escape_attempts = 0;
+
+SELECT owners.full_name AS OWNER, count(owners.full_name) as PET FROM
+animals INNER JOIN owners ON animals.owners_id = owners.id GROUP BY owners.full_name
+HAVING COUNT(owners.full_name) = (SELECT MAX(NUMPETS)
+  FROM (SELECT COUNT(animals.owners_id) as NUMPETS
+  FROM animals GROUP BY animals.owners_id) PETSOWNER
+);
