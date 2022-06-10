@@ -91,3 +91,43 @@ HAVING COUNT(owners.full_name) = (SELECT MAX(NUMPETS)
   FROM (SELECT COUNT(animals.owners_id) as NUMPETS
   FROM animals GROUP BY animals.owners_id) PETSOWNER
 );
+
+/* MANY-TO-MANY QUERY TABLE */
+
+SELECT animals.name AS ANIMAL, visits.date_of_visit, vets.name AS VET FROM animals
+INNER JOIN visits ON animals.id = visits.animals_id INNER JOIN vets ON visits.vets_id = vets.id
+WHERE vets.name = 'William Tatcher' 
+  AND visits.date_of_visit = (SELECT MAX(visits.date_of_visit) FROM vets INNER JOIN
+  visits ON vets.id = WHERE vets.name = 'William Tatcher'
+);
+
+SELECT vets AS VET, COUNT(DISTINCT visits.animals_id) AS NUMANIMALS FROM visits
+INNER JOIN vets ON visits.vets_id = vets.id GROUP BY (vets.name) HAVING vets.name = 'Stephenie Mendez';
+
+SELECT vets.name as VET, species.name AS spetializations FROM vets LEFT JOIN specializations ON
+vets.id = specializations.vets_id LEFT JOIN species ON specializations.species_id = species.id;
+
+SELECT animals.name AS ANIMAL, COUNT(animals.name) AS VISITS FROM animals INNER JOIN visits 
+  ON animals.id = visits.animals_id GROUP BY animals.name HAVING COUNT(animals.name) = (SELECT MAX(NUMVISITS) 
+  FROM (SELECT COUNT(visits.animals_id) AS NUMVISITS, visits.animals_id
+  FROM visits GROUP BY visits.animal_id) VISITBYANIMALS
+);
+
+SELECT animals.name AS ANIMAL, visits.date_of_visit, vets.name AS VET FROM animals INNER JOIN visits ON animals.id = visits.animals_id
+INNER JOIN vets ON visits.vets_id = vets.id WHERE vets.name = 'Maisy Smith' AND visits.date_of_visit = (SELECT MIN(visits.date_of_visit)
+FROM vets INNER JOIN visits ON vets.id = visits.vets_id WHERE vets.name = 'Maisy Smith'
+);
+
+SELECT animals.name AS ANIMAL, vets.name AS VET, visits.date_of_visit FROM animals INNER JOIN visits ON animals.id = visits.animals_id
+INNER JOIN vets ON visits.vets_id = vets.id WHERE visits.date_of_visit = (SELECT MAX(visits.date_of_visit) FROM visits);
+
+SELECT COUNT(*) FROM (SELECT animals.name, animals.specie_id, visits.vets_id FROM visits INNER JOIN animals ON visits.animals_id = animals.id) A
+LEFT JOIN (SELECT vets.name, spetializations.vets_id, spetializations.species_id FROM vets INNER JOIN spetializations ON vets.id = spetializations.vets_id) B
+ON A.vets_id = B.vets_id AND A.species_id = B.species_id WHERE B.species_id IS NULL;
+
+SELECT species.name AS ALIKELYSPECIALIZATION FROM (SELECT animals.species_id
+FROM(((SELECT * FROM vets WHERE vets.name = 'Maisy Smith') VET INNER JOIN visits ON VET.id = visits.vets_id)
+INNER JOIN animals ON visits.animals_id = animals.id) GROUP BY animals.species_id
+HAVING COUNT(animals.species_id) = (SELECT MAX(PERSPECIEVISIT) FROM (((SELECT * FROM vets WHERE vets.name = 'Maisy Smith') VET INNER JOIN visits
+ON VET.id = visits.vets_id) INNER JOIN animals ON visits.animals_id = animals.id) GROUP BY animals.species_id) VETVISITS)
+MOSTSPECIES INNER JOIN species ON MOSTSPECIES.species_id = species.id;
