@@ -42,7 +42,7 @@ CREATE TABLE vets (
 );
 
 CREATE TABLE spetializations (
-    vet_id      INT NOT NULL,
+    vets_id      INT NOT NULL,
     species_id   INT NOT NULL,
     CONSTRAINT k_vet
         FOREIGN KEY (vet_id)
@@ -56,14 +56,14 @@ CREATE TABLE spetializations (
 
 CREATE TABLE visits (
     animals_id       INT NOT NULL,
-    vet_id          INT NOT NULL,
+    vets_id          INT NOT NULL,
     date_of_visit   DATE NOT NULL,
     CONSTRAINT k_animals
         FOREIGN KEY (animals_id)
         REFERENCES animals(id)
         ON DELETE RESTRICT,
     CONSTRAINT k_vet
-        FOREIGN KEY (vet_id)
+        FOREIGN KEY (vets_id)
         REFERENCES vets(id)
         ON DELETE RESTRICT
 );
